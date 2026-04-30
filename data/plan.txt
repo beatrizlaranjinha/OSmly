@@ -1,0 +1,2 @@
+prog1.prg 0 1
+//programa , tempo de chegada , prioridade
