@@ -15,10 +15,10 @@ Este documento detalha o planeamento de execução do projeto, dividido por fase
 * **Texto Orientador (Briefing de Execução):**
     Dev 1, a fundação começa contigo. Preciso que cries o repositório no GitLab/GitHub e partilhes os acessos com a equipa e professores. Configura o ambiente de compilação utilizando estritamente o `dune` para OCaml. Garante que o projeto compila e executa nativamente num sistema POSIX (Linux/MacOS/WSL) a partir da linha de comandos.
 * **Definition of Done (DoD):**
-    - [ ] Repositório criado e acessível.
-    - [ ] `dune` a compilar um "Hello World" em OCaml com sucesso.
-    - [ ] Pipeline de CI básico (GitHub Actions/GitLab CI) a validar o build em ambiente Linux.
-    - [ ] Uso obrigatório de commits para histórico de desenvolvimento.
+    - [ x] Repositório criado e acessível.
+    - [ x] `dune` a compilar um "Hello World" em OCaml com sucesso.
+    - [ x] Pipeline de CI básico (GitHub Actions/GitLab CI) a validar o build em ambiente Linux.
+    - [ x] Uso obrigatório de commits para histórico de desenvolvimento.
 
 ### 🧠 Tarefa 1.2: Desenho de Tipos Core: PCB e Modelo de Memória
 * **Atribuição:** Dev 2
