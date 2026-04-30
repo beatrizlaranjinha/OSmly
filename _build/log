@@ -1,0 +1,29 @@
+# dune build
+# OCAMLPARAM: unset
+# Shared cache: enabled-except-user-rules
+# Shared cache location: /Users/beatrizlaranjinha/.cache/dune/db
+# Workspace root:
+# /Users/beatrizlaranjinha/Desktop/Universidade/4ano/SO/group_project/group_project
+# Auto-detected concurrency: 8
+# Dune context:
+#  { name = "default"
+#  ; kind = "default"
+#  ; profile = Dev
+#  ; merlin = true
+#  ; fdo_target_exe = None
+#  ; build_dir = In_build_dir "default"
+#  ; instrument_with = []
+#  }
+$ /opt/homebrew/bin/ocamlc.opt -config > /var/folders/vj/055znpz14yq7qrff8l132z8h0000gn/T/dune_b230a7_output
+# Promoting "_build/default/group_project.opam" to "group_project.opam"
+$ (cd _build/default && /opt/homebrew/bin/ocamlc.opt -w @1..3@5..28@31..39@43@46..47@49..57@61..62@67@69-40 -strict-sequence -strict-formats -short-paths -keep-locs -w -49 -nopervasives -nostdlib -g -bin-annot -bin-annot-occurrences -I lib/.group_project.objs/byte -no-alias-deps -opaque -o lib/.group_project.objs/byte/group_project.cmo -c -impl lib/group_project.ml-gen)
+$ (cd _build/default && /opt/homebrew/bin/ocamlc.opt -w @1..3@5..28@31..39@43@46..47@49..57@61..62@67@69-40 -strict-sequence -strict-formats -short-paths -keep-locs -g -bin-annot -bin-annot-occurrences -I test/.test_group_project.eobjs/byte -no-alias-deps -opaque -o test/.test_group_project.eobjs/byte/dune__exe__Test_group_project.cmi -c -intf test/test_group_project.mli)
+$ (cd _build/default && /opt/homebrew/bin/ocamlc.opt -w @1..3@5..28@31..39@43@46..47@49..57@61..62@67@69-40 -strict-sequence -strict-formats -short-paths -keep-locs -g -a -o lib/group_project.cma lib/.group_project.objs/byte/group_project.cmo)
+$ (cd _build/default && /opt/homebrew/bin/ocamlc.opt -w @1..3@5..28@31..39@43@46..47@49..57@61..62@67@69-40 -strict-sequence -strict-formats -short-paths -keep-locs -g -bin-annot -bin-annot-occurrences -I bin/.main.eobjs/byte -I lib/.group_project.objs/byte -no-alias-deps -opaque -o bin/.main.eobjs/byte/dune__exe__Main.cmi -c -intf bin/main.mli)
+$ (cd _build/default && /opt/homebrew/bin/ocamlopt.opt -w @1..3@5..28@31..39@43@46..47@49..57@61..62@67@69-40 -strict-sequence -strict-formats -short-paths -keep-locs -w -49 -nopervasives -nostdlib -g -I lib/.group_project.objs/byte -I lib/.group_project.objs/native -intf-suffix .ml-gen -no-alias-deps -opaque -o lib/.group_project.objs/native/group_project.cmx -c -impl lib/group_project.ml-gen)
+$ (cd _build/default && /opt/homebrew/bin/ocamlopt.opt -w @1..3@5..28@31..39@43@46..47@49..57@61..62@67@69-40 -strict-sequence -strict-formats -short-paths -keep-locs -g -I test/.test_group_project.eobjs/byte -I test/.test_group_project.eobjs/native -intf-suffix .ml -no-alias-deps -opaque -o test/.test_group_project.eobjs/native/dune__exe__Test_group_project.cmx -c -impl test/test_group_project.ml)
+$ (cd _build/default && /opt/homebrew/bin/ocamlopt.opt -w @1..3@5..28@31..39@43@46..47@49..57@61..62@67@69-40 -strict-sequence -strict-formats -short-paths -keep-locs -g -I bin/.main.eobjs/byte -I bin/.main.eobjs/native -I lib/.group_project.objs/byte -I lib/.group_project.objs/native -intf-suffix .ml -no-alias-deps -opaque -o bin/.main.eobjs/native/dune__exe__Main.cmx -c -impl bin/main.ml)
+$ (cd _build/default && /opt/homebrew/bin/ocamlopt.opt -w @1..3@5..28@31..39@43@46..47@49..57@61..62@67@69-40 -strict-sequence -strict-formats -short-paths -keep-locs -g -a -o lib/group_project.cmxa lib/.group_project.objs/native/group_project.cmx)
+$ (cd _build/default && /opt/homebrew/bin/ocamlopt.opt -w @1..3@5..28@31..39@43@46..47@49..57@61..62@67@69-40 -strict-sequence -strict-formats -short-paths -keep-locs -g -shared -linkall -I lib -o lib/group_project.cmxs lib/group_project.cmxa)
+$ (cd _build/default && /opt/homebrew/bin/ocamlopt.opt -w @1..3@5..28@31..39@43@46..47@49..57@61..62@67@69-40 -strict-sequence -strict-formats -short-paths -keep-locs -g -o bin/main.exe lib/group_project.cmxa bin/.main.eobjs/native/dune__exe__Main.cmx)
+$ (cd _build/default && /opt/homebrew/bin/ocamlopt.opt -w @1..3@5..28@31..39@43@46..47@49..57@61..62@67@69-40 -strict-sequence -strict-formats -short-paths -keep-locs -g -o test/test_group_project.exe test/.test_group_project.eobjs/native/dune__exe__Test_group_project.cmx)

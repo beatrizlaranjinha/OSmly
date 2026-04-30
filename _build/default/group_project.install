@@ -1,0 +1,8 @@
+lib: [
+  "_build/install/default/lib/group_project/META"
+  "_build/install/default/lib/group_project/dune-package"
+  "_build/install/default/lib/group_project/opam"
+]
+bin: [
+  "_build/install/default/bin/group_project"
+]
