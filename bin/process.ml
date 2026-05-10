@@ -28,6 +28,7 @@ type pcb = {
   end_time : int option;        (* tempo de fim, se já terminou *)
   state : state;                (* estado atual do processo *)
 }
+
 (* Cria um novo PCB. *)
 let create_pcb pid ppid program_name start_address priority arrival_time =
   {
@@ -43,3 +44,30 @@ let create_pcb pid ppid program_name start_address priority arrival_time =
     end_time = None;
     state = Ready;
   }
+
+
+(*executar instruções sem ser mutables*)
+
+(* Atualiza o PC de um processo. *)
+let update_pc pcb new_pc =
+  { pcb with pc = new_pc }
+
+(* Avança o PC uma instrução. *)
+let increment_pc pcb =
+  { pcb with pc = pcb.pc + 1 }
+
+(* Atualiza o valor da variável inteira do processo. *)
+let update_value pcb new_value =
+  { pcb with value = new_value }
+
+(* Atualiza o tempo total de CPU usado. *)
+let increment_cpu_time pcb =
+  { pcb with cpu_time = pcb.cpu_time + 1 }
+
+(* Altera o estado do processo. *)
+let update_state pcb new_state =
+  { pcb with state = new_state }
+
+(* Termina o processo, guardando o tempo de fim. *)
+let terminate_process pcb current_time =
+  { pcb with state = Terminated; end_time = Some current_time }
