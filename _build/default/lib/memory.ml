@@ -1,6 +1,6 @@
 open Instructions
 
-let memory_size = 1000
+let memory_size = 200
 
 (* Memória simulada: lista de instruções. *)
 type memory = instruction list
@@ -23,3 +23,27 @@ let load_program_from_file filename =
   let channel = open_in filename in
   read_lines channel
   |> List.map parse_instruction
+
+(* Substitui elementos de uma lista a partir de uma posição. *)
+let rec replace_at memory program index =
+  match memory, program with
+  | [], _ -> []
+  | memory, [] -> memory
+  | head_memory :: tail_memory, head_program :: tail_program ->
+      if index = 0 then
+        head_program :: replace_at tail_memory tail_program 0
+      else
+        head_memory :: replace_at tail_memory program (index - 1)
+
+(* Carrega um programa para a memória numa posição inicial. *)
+let load_program memory program start_address =
+  replace_at memory program start_address
+
+(* Imprime todas as instruções da memória. *)
+let print_memory memory =
+  List.iteri
+    (fun index instruction ->
+      print_endline
+        (string_of_int index ^ ": " ^
+         Instructions.string_of_instruction instruction))
+    memory

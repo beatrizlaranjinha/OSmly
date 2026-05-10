@@ -1,6 +1,6 @@
 open Instructions
 
-let memory_size = 1000
+let memory_size = 200
 
 (* Memória simulada: lista de instruções. *)
 type memory = instruction list
@@ -38,3 +38,12 @@ let rec replace_at memory program index =
 (* Carrega um programa para a memória numa posição inicial. *)
 let load_program memory program start_address =
   replace_at memory program start_address
+
+(* Imprime todas as instruções da memória. *)
+let print_memory memory =
+  List.iteri
+    (fun index instruction ->
+      print_endline
+        (string_of_int index ^ ": " ^
+         Instructions.string_of_instruction instruction))
+    memory
