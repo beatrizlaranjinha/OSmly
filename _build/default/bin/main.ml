@@ -1,1 +1,4 @@
-let () = print_endline "Hello, World!"
+
+let () =
+  let _memory = Group_project.Memory.create_memory () in
+  print_endline "Simulador iniciado"
