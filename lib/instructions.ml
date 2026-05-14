@@ -1,5 +1,3 @@
-(* Converte linhas dos ficheiros .prg em instruções OCaml. *)
-
 type instruction =
   | M of int        (* muda a variável para n *)
   | A of int        (* adiciona n à variável *)
