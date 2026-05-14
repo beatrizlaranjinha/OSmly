@@ -3,6 +3,9 @@
 (** @canonical Group_project.Instructions *)
 module Instructions = Group_project__Instructions
 
+(** @canonical Group_project.Manager *)
+module Manager = Group_project__Manager
+
 (** @canonical Group_project.Memory *)
 module Memory = Group_project__Memory
 

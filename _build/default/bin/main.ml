@@ -1,26 +1,29 @@
 let () =
   let memory = Group_project.Memory.create_memory () in
 
-  let program =
-    Group_project.Memory.load_program_from_file "p1.prg"
+  let manager =
+    Group_project.Manager.create_manager memory
   in
 
-  let memory =
-    Group_project.Memory.load_program memory program 0
+  let plan =
+    Group_project.Plan.load_plan "data/plan.txt"
+  in
+
+  let manager =
+    List.fold_left
+      Group_project.Manager.add_process_from_plan
+      manager
+      plan
   in
 
   print_endline "Simulador iniciado";
-
-  Group_project.Memory.print_memory memory
-
-let () =
-  let plan = Group_project.Plan.load_plan "data/plan.txt" in
-
-  print_endline "Plano carregado:";
+  print_endline "Processos na ready queue:";
 
   List.iter
-    (fun (entry : Group_project.Plan.plan_entry) ->
+    (fun pcb ->
       print_endline
-        (entry.program_name ^ " chega no tempo " ^
-         string_of_int entry.arrival_time))
-    plan
+        ("PID " ^
+         string_of_int pcb.Group_project.Process.pid ^
+         " -> " ^
+         pcb.Group_project.Process.program_name))
+    manager.Group_project.Manager.ready_queue
