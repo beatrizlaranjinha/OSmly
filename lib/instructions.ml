@@ -1,14 +1,15 @@
+(* Tipos de instruções suportadas pelo simulador. *)
 type instruction =
-  | M of int        (* muda a variável para n *)
-  | A of int        (* adiciona n à variável *)
-  | S of int        (* subtrai n à variável *)
-  | B               (* bloqueia o processo *)
-  | T               (* termina o processo *)
-  | C of int        (* cria filho; pai salta n instruções *)
-  | L of string     (* carrega/substitui por outro programa *)
-  | Empty           (* instrução vazia/inválida *)
+  | M of int        (* Altera o valor da variável do processo para n *)
+  | A of int        (* Adiciona n à variável do processo *)
+  | S of int        (* Subtrai n à variável do processo *)
+  | B               (* Bloqueia o processo *)
+  | T               (* Termina o processo *)
+  | C of int        (* Cria um processo filho. O pai salta n instruções. *)
+  | L of string     (* Carrega um novo programa para a memória *)
+  | Empty           (* Instrução vazia ou não reconhecida *)
 
-(* Transforma uma linha de texto numa instruction. *)
+(* Converte uma string numa estrutura instruction. *)
 let parse_instruction line =
   match String.split_on_char ' ' (String.trim line) with
   | ["M"; n] -> M (int_of_string n)
@@ -20,7 +21,7 @@ let parse_instruction line =
   | ["L"; filename] -> L filename
   | _ -> Empty
 
-(* Transforma uma instruction em texto. *)
+(* Converte uma estrutura instruction numa string representativa. *)
 let string_of_instruction instr =
   match instr with
   | M n -> "M " ^ string_of_int n

@@ -1,1 +1,1 @@
-lib/memory.ml: Instructions List
+lib/memory.ml: Array Instructions List

@@ -1,47 +1,68 @@
 open Instructions
 
-let memory_size = 200
+(* Dimensão total da memória. *)
+let memory_size = 1000
 
-(* Memória simulada: lista de instruções. *)
-type memory = instruction list
+(* Tipo de dados para representar a memória. *)
+type memory = instruction array
 
-(* Cria memória vazia com 1000 posições Empty. *)
+(* Inicializa um array de memória com instruções vazias. *)
 let create_memory () =
-  List.init memory_size (fun _ -> Empty)
+  Array.make memory_size Empty
+
+(* Procura um bloco contíguo de tamanho livre na memória (First Fit). *)
+let allocate_memory memory size =
+  let rec search idx current_free start_free =
+    if current_free = size then Some start_free
+    else if idx >= memory_size then None
+    else
+      match memory.(idx) with
+      | Instructions.Empty -> search (idx + 1) (current_free + 1) start_free
+      | _ -> search (idx + 1) 0 (idx + 1)
+  in
+  if size <= 0 then Some 0 else search 0 0 0
+
+(* Liberta a memória substituindo as instruções por Empty. *)
+let free_memory memory start_address size =
+  let new_memory = Array.copy memory in
+  for i = 0 to size - 1 do
+    if start_address + i < memory_size then
+      new_memory.(start_address + i) <- Instructions.Empty
+  done;
+  new_memory
 
 (* Lê todas as linhas de um ficheiro de forma recursiva. *)
-let rec read_lines channel =
-  try
-    let line = input_line channel in
-    line :: read_lines channel
-  with End_of_file ->
-    close_in channel;
-    []
+let read_lines channel =
+  let rec loop acc =
+    try
+      let line = input_line channel in
+      loop (line :: acc)
+    with End_of_file ->
+      close_in channel;
+      List.rev acc
+  in
+  loop []
 
-(* Lê um ficheiro .prg e converte cada linha numa instruction. *)
+(* Lê um ficheiro e converte as suas linhas numa lista de instruções. *)
 let load_program_from_file filename =
   let channel = open_in filename in
   read_lines channel
   |> List.map parse_instruction
 
-(* Substitui elementos de uma lista a partir de uma posição. *)
-let rec replace_at memory program index =
-  match memory, program with
-  | [], _ -> []
-  | memory, [] -> memory
-  | head_memory :: tail_memory, head_program :: tail_program ->
-      if index = 0 then
-        head_program :: replace_at tail_memory tail_program 0
-      else
-        head_memory :: replace_at tail_memory program (index - 1)
-
-(* Carrega um programa para a memória numa posição inicial. *)
+(* Carrega uma lista de instruções para a memória a partir de um endereço inicial.
+   Retorna uma cópia da memória atualizada. *)
 let load_program memory program start_address =
-  replace_at memory program start_address
-
-(* Imprime todas as instruções da memória. *)
-let print_memory memory =
+  let new_memory = Array.copy memory in
   List.iteri
+    (fun i instr ->
+      if start_address + i < memory_size then
+        new_memory.(start_address + i) <- instr)
+    program;
+  new_memory
+
+(* Imprime o conteúdo da memória no standard output. *)
+let print_memory memory =
+  Array.iteri
     (fun index instruction ->
       print_endline
         (string_of_int index ^ ": " ^

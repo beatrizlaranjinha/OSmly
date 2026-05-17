@@ -1,14 +1,55 @@
+(* Função recursiva que processa os comandos de controlo a partir da entrada padrão (stdin). *)
+let rec control_loop manager =
+  print_string "> ";
+  flush stdout;
+  try
+    let line = input_line stdin in
+    (* Formata o comando lido para maiúsculas e remove espaços. *)
+    let cmd = String.trim (String.uppercase_ascii line) in
+    match cmd with
+    | "E" ->
+        let new_manager = Group_project.Manager.command_E manager in
+        control_loop new_manager
+    | "I" ->
+        let new_manager = Group_project.Manager.command_I manager in
+        control_loop new_manager
+    | "D" ->
+        let new_manager = Group_project.Manager.command_D manager in
+        control_loop new_manager
+    | "R" ->
+        let new_manager = Group_project.Manager.command_R manager in
+        control_loop new_manager
+    | "T" ->
+        print_endline "A terminar o simulador...";
+        let _ = Group_project.Manager.command_R manager in
+        print_endline "Estatísticas globais impressas. Adeus!"
+        (* Termina o ciclo de controlo. *)
+    | "" -> control_loop manager
+    | _ ->
+        print_endline "Comando inválido. Use E, I, D, R, ou T.";
+        control_loop manager
+  with End_of_file ->
+    (* Termina o simulador caso encontre o fim do ficheiro ou da entrada padrão. *)
+    print_endline "\nFim da entrada. A terminar o simulador...";
+    let _ = Group_project.Manager.command_R manager in
+    ()
+
+(* Função principal do programa. *)
 let () =
+  (* Inicializa a memória. *)
   let memory = Group_project.Memory.create_memory () in
 
+  (* Inicializa o gestor principal. *)
   let manager =
     Group_project.Manager.create_manager memory
   in
 
+  (* Carrega o plano de execução. *)
   let plan =
     Group_project.Plan.load_plan "data/plan.txt"
   in
 
+  (* Processa as entradas do plano e adiciona os processos ao gestor. *)
   let manager =
     List.fold_left
       Group_project.Manager.add_process_from_plan
@@ -16,14 +57,7 @@ let () =
       plan
   in
 
-  print_endline "Simulador iniciado";
-  print_endline "Processos na ready queue:";
-
-  List.iter
-    (fun pcb ->
-      print_endline
-        ("PID " ^
-         string_of_int pcb.Group_project.Process.pid ^
-         " -> " ^
-         pcb.Group_project.Process.program_name))
-    manager.Group_project.Manager.ready_queue
+  (* Inicia o ciclo de controlo de comandos. *)
+  print_endline "Simulador iniciado. Carregados processos do plano.";
+  print_endline "Comandos disponíveis: E (Executar), I (Interromper), D (Desbloquear), R (Reportar), T (Terminar).";
+  control_loop manager
