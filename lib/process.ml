@@ -27,10 +27,11 @@ type pcb = {
   cpu_time : int;               (* Tempo total gasto no CPU *)
   end_time : int option;        (* Tempo em que a execução terminou *)
   state : state;                (* Estado atual do processo *)
+  period : int option;          (* Período para os processos de tempo real *)
 }
 
 (* Cria um novo PCB com os dados iniciais. *)
-let create_pcb pid ppid program_name start_address size priority arrival_time =
+let create_pcb pid ppid program_name start_address size priority arrival_time period =
   {
     pid;
     ppid;
@@ -44,6 +45,7 @@ let create_pcb pid ppid program_name start_address size priority arrival_time =
     cpu_time = 0;
     end_time = None;
     state = Ready;      (* O estado inicial é Ready *)
+    period;
   }
 
 (* Funções auxiliares para atualização do PCB de forma funcional. *)

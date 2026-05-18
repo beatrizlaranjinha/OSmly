@@ -11,16 +11,20 @@ let create_memory () =
   Array.make memory_size Empty
 
 (* Procura um bloco contíguo de tamanho livre na memória (First Fit). *)
-let allocate_memory memory size =
-  let rec search idx current_free start_free =
-    if current_free = size then Some start_free
-    else if idx >= memory_size then None
-    else
-      match memory.(idx) with
-      | Instructions.Empty -> search (idx + 1) (current_free + 1) start_free
-      | _ -> search (idx + 1) 0 (idx + 1)
+let allocate_memory allocated_blocks size =
+  let sorted_blocks = List.sort (fun (a,_) (b,_) -> compare a b) allocated_blocks in
+  let rec find_hole current_pos blocks =
+    if current_pos + size <= memory_size then
+      match blocks with
+      | [] -> Some current_pos
+      | (b_start, b_size) :: rest ->
+          if current_pos + size <= b_start then
+            Some current_pos
+          else
+            find_hole (max current_pos (b_start + b_size)) rest
+    else None
   in
-  if size <= 0 then Some 0 else search 0 0 0
+  if size <= 0 then Some 0 else find_hole 0 sorted_blocks
 
 (* Liberta a memória substituindo as instruções por Empty. *)
 let free_memory memory start_address size =
@@ -43,11 +47,22 @@ let read_lines channel =
   in
   loop []
 
-(* Lê um ficheiro e converte as suas linhas numa lista de instruções. *)
+(* Lê um ficheiro e converte as suas linhas numa lista de instruções.
+   O enunciado exige que a 1ª linha especifique o tamanho inicial da memória. *)
 let load_program_from_file filename =
   let channel = open_in filename in
-  read_lines channel
-  |> List.map parse_instruction
+  let lines = read_lines channel in
+  match lines with
+  | [] -> (0, [])
+  | first_line :: rest ->
+      (match int_of_string_opt (String.trim first_line) with
+       | Some size -> 
+           (* Proteção contra tamanhos negativos inseridos por utilizadores maliciosos *)
+           let safe_size = if size < 0 then 0 else size in
+           (safe_size, List.map parse_instruction rest)
+       | None -> 
+           (* Fallback: se não for número, assume o tamanho das instruções *)
+           (List.length lines, List.map parse_instruction lines))
 
 (* Carrega uma lista de instruções para a memória a partir de um endereço inicial.
    Retorna uma cópia da memória atualizada. *)

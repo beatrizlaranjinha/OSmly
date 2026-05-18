@@ -3,19 +3,27 @@ type plan_entry = {
   program_name : string;  (* Nome do programa *)
   arrival_time : int;     (* Tempo de chegada *)
   priority : int;         (* Prioridade de escalonamento *)
+  period : int option;    (* Período para processos de tempo real *)
 }
 
 (* Processa uma linha de texto e converte numa estrutura plan_entry. *)
 let parse_plan_line line =
   let tokens = String.split_on_char ' ' (String.trim line) |> List.filter (fun s -> s <> "") in
   match tokens with
+  | [program_name; arrival_time; priority; period] ->
+      (match int_of_string_opt arrival_time, int_of_string_opt priority, int_of_string_opt period with
+       | Some a, Some p, Some pr -> 
+           (* Proteção contra períodos nulos ou negativos que quebrariam o fluxo temporal *)
+           let safe_period = if pr <= 0 then None else Some pr in
+           Some { program_name; arrival_time = a; priority = p; period = safe_period }
+       | _ -> None)
   | [program_name; arrival_time; priority] ->
       (match int_of_string_opt arrival_time, int_of_string_opt priority with
-       | Some a, Some p -> Some { program_name; arrival_time = a; priority = p }
+       | Some a, Some p -> Some { program_name; arrival_time = a; priority = p; period = None }
        | _ -> None)
   | [program_name; arrival_time] ->
       (match int_of_string_opt arrival_time with
-       | Some a -> Some { program_name; arrival_time = a; priority = 1 }
+       | Some a -> Some { program_name; arrival_time = a; priority = 1; period = None }
        | _ -> None)
   | [] -> None
   | _ -> None
