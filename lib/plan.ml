@@ -1,14 +1,16 @@
 type plan_entry = {
   program_name : string;
   arrival_time : int;
+  priority: int;
 }
 
 let parse_plan_line line =
   match String.split_on_char ' ' (String.trim line) with
-  | [program_name; arrival_time] ->
+  | [program_name; arrival_time; priority] ->
       {
         program_name;
         arrival_time = int_of_string arrival_time;
+        priority = int_of_string priority
       }
   | _ ->
       failwith "Linha inválida no plan.txt"

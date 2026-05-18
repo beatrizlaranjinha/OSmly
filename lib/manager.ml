@@ -7,6 +7,7 @@ type manager = {
   ready_queue : Process.pcb list;     (* fila de processos prontos *)
   blocked_queue : Process.pcb list;   (* fila de processos bloqueados *)
   terminated : Process.pcb list;      (* processos terminados *)
+  running : Process.pcb option;
   next_pid : int;                     (* próximo PID disponível *)
 }
 
@@ -18,6 +19,7 @@ let create_manager memory =
     ready_queue = [];
     blocked_queue = [];
     terminated = [];
+    running = None;
     next_pid = 1;
   }
 
@@ -39,7 +41,7 @@ let add_process_from_plan manager plan_entry =
       0
       plan_entry.Plan.program_name
       start_address
-      1
+      plan_entry.Plan.priority
       plan_entry.Plan.arrival_time
   in
 
