@@ -37,7 +37,10 @@ let create_manager memory policy =
 
 (* Cria um processo a partir de uma entrada do plano e adiciona-o à fila de prontos com alocação dinâmica. *)
 let add_process_from_plan manager plan_entry =
-  let program_opt = try Some (Memory.load_program_from_file ("data/" ^ plan_entry.Plan.program_name)) with Sys_error _ -> None in
+  if String.contains plan_entry.Plan.program_name '/' || String.contains plan_entry.Plan.program_name '\\' then
+    (print_endline ("Erro: Caminho inválido (Tentativa de Path Traversal) para " ^ plan_entry.Plan.program_name); manager)
+  else
+    let program_opt = try Some (Memory.load_program_from_file ("data/" ^ plan_entry.Plan.program_name)) with Sys_error _ -> None in
   match program_opt with
   | None ->
       print_endline ("Erro: Programa " ^ plan_entry.Plan.program_name ^ " não encontrado. Processo não criado.");
@@ -231,9 +234,15 @@ let rec execute_quantum manager pcb quantum_left =
              execute_quantum manager_with_child parent_pcb (quantum_left - 1))
     | Instructions.L filename ->
         let pcb = Process.increment_cpu_time pcb in
-        let temp_mem = Memory.free_memory manager_advanced.memory pcb.Process.start_address pcb.Process.size in
-        (* Previne falhas (Sys_error) ao tentar carregar um ficheiro inexistente. *)
-        let program_opt = try Some (Memory.load_program_from_file ("data/" ^ filename)) with Sys_error _ -> None in
+        if String.contains filename '/' || String.contains filename '\\' then
+          (print_endline ("Erro: Caminho inválido (Tentativa de Path Traversal) para " ^ filename ^ ". Processo terminado.");
+           let term_pcb = Process.terminate_process pcb manager_advanced.time in
+           let new_mem = Memory.free_memory manager_advanced.memory pcb.Process.start_address pcb.Process.size in
+           { manager_advanced with memory = new_mem; running = None; terminated = manager_advanced.terminated @ [term_pcb] })
+        else
+          let temp_mem = Memory.free_memory manager_advanced.memory pcb.Process.start_address pcb.Process.size in
+          (* Previne falhas (Sys_error) ao tentar carregar um ficheiro inexistente. *)
+          let program_opt = try Some (Memory.load_program_from_file ("data/" ^ filename)) with Sys_error _ -> None in
         (match program_opt with
          | None ->
              print_endline ("Erro: Ficheiro " ^ filename ^ " não encontrado (L). Processo terminado.");
