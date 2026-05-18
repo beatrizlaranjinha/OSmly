@@ -36,12 +36,34 @@ let rec control_loop manager =
 
 (* Função principal do programa. *)
 let () =
+  (* Inicializa o gerador de números aleatórios para o Escalonador de Longo Prazo *)
+  Random.self_init ();
+
   (* Inicializa a memória. *)
   let memory = Group_project.Memory.create_memory () in
 
+  (* Pergunta ao utilizador qual a política de escalonamento a usar *)
+  print_endline "\n--- CONFIGURAÇÃO DO SIMULADOR ---";
+  print_endline "Escolha a política de escalonamento (Short-Term):";
+  print_endline "1 - FCFS (First-Come, First-Served)";
+  print_endline "2 - Priority (Baseada na prioridade)";
+  print_endline "3 - SJF (Shortest Job First)";
+  print_endline "4 - EDF (Earliest Deadline First / Rate Monotonic)";
+  print_string "Opção > ";
+  flush stdout;
+  let policy = 
+    try match String.trim (read_line ()) with
+      | "1" -> Group_project.Manager.FCFS
+      | "2" -> Group_project.Manager.Priority
+      | "3" -> Group_project.Manager.SJF
+      | "4" -> Group_project.Manager.EDF
+      | _ -> print_endline "Opção inválida. A usar Priority por defeito."; Group_project.Manager.Priority
+    with End_of_file -> Group_project.Manager.Priority
+  in
+
   (* Inicializa o gestor principal. *)
   let manager =
-    Group_project.Manager.create_manager memory
+    Group_project.Manager.create_manager memory policy
   in
 
   (* Carrega o plano de execução. *)

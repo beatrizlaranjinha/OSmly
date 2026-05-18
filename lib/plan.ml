@@ -7,21 +7,18 @@ type plan_entry = {
 
 (* Processa uma linha de texto e converte numa estrutura plan_entry. *)
 let parse_plan_line line =
-  match String.split_on_char ' ' (String.trim line) with
+  let tokens = String.split_on_char ' ' (String.trim line) |> List.filter (fun s -> s <> "") in
+  match tokens with
   | [program_name; arrival_time; priority] ->
-      {
-        program_name;
-        arrival_time = int_of_string arrival_time;
-        priority = int_of_string priority;
-      }
+      (match int_of_string_opt arrival_time, int_of_string_opt priority with
+       | Some a, Some p -> Some { program_name; arrival_time = a; priority = p }
+       | _ -> None)
   | [program_name; arrival_time] ->
-      {
-        program_name;
-        arrival_time = int_of_string arrival_time;
-        priority = 1; (* Prioridade por defeito *)
-      }
-  | _ ->
-      failwith "Linha inválida no ficheiro plan.txt"
+      (match int_of_string_opt arrival_time with
+       | Some a -> Some { program_name; arrival_time = a; priority = 1 }
+       | _ -> None)
+  | [] -> None
+  | _ -> None
 
 (* Lê todas as linhas de um canal de entrada. *)
 let read_lines channel =
@@ -37,6 +34,10 @@ let read_lines channel =
 
 (* Carrega o plano de execução a partir de um ficheiro. *)
 let load_plan filename =
-  let channel = open_in filename in
-  read_lines channel
-  |> List.map parse_plan_line
+  try
+    let channel = open_in filename in
+    let lines = read_lines channel in
+    List.filter_map parse_plan_line lines
+  with Sys_error _ ->
+    print_endline ("Aviso: Ficheiro de plano " ^ filename ^ " não encontrado. O simulador arranca vazio.");
+    []
