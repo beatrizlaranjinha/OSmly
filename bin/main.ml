@@ -63,9 +63,10 @@ let () =
   print_endline "3 - SJF (Shortest Job First)";
   print_endline "4 - EDF (Earliest Deadline First)";
   print_endline "5 - RM (Rate Monotonic)";
-  if in_channel = stdin then (print_string "Opção > "; flush stdout);
+  print_string "Opção > "; 
+  flush stdout;
   let policy = 
-    try match String.trim (input_line in_channel) with
+    try match String.trim (input_line stdin) with
       | "1" -> Group_project.Manager.FCFS
       | "2" -> Group_project.Manager.Priority
       | "3" -> Group_project.Manager.SJF

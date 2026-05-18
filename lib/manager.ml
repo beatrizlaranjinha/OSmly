@@ -170,59 +170,83 @@ let command_I manager =
       print_endline "Nenhum processo em execução para interromper.";
       manager
 
-(* Formatador auxiliar para o PCB normal *)
+(* Formatador auxiliar para o cabeçalho das tabelas *)
+let header_pcb = "PID   | PPID  | Prio  | Valor | Chegada | CPU Time | Período "
+let header_term = "PID   | PPID  | Prio  | Valor | Chegada | Fim   | CPU Time"
+
+(* Formatador auxiliar para o PCB normal (Alinhado à esquerda para formar tabela) *)
 let string_of_pcb p =
-  Printf.sprintf "%d, %d, %d, %d, %d, %d"
-    p.Process.pid p.Process.ppid p.Process.priority p.Process.value p.Process.arrival_time p.Process.cpu_time
+  let period_str = match p.Process.period with Some pr -> string_of_int pr | None -> "-" in
+  Printf.sprintf "%-5d | %-5d | %-5d | %-5d | %-7d | %-8d | %s"
+    p.Process.pid p.Process.ppid p.Process.priority p.Process.value p.Process.arrival_time p.Process.cpu_time period_str
 
 (* Formatador auxiliar para PCB terminado *)
 let string_of_term_pcb p =
   let end_t = match p.Process.end_time with Some t -> t | None -> 0 in
-  Printf.sprintf "%d, %d, %d, %d, %d, %d, %d"
+  Printf.sprintf "%-5d | %-5d | %-5d | %-5d | %-7d | %-5d | %-8d"
     p.Process.pid p.Process.ppid p.Process.priority p.Process.value p.Process.arrival_time end_t p.Process.cpu_time
 
-(* Comando R: Imprime o estado atual do simulador. *)
+(* Comando R: Imprime o estado atual do simulador em forma de dashboard. *)
 let command_R manager =
-  print_endline ("TEMPO ACTUAL: " ^ string_of_int manager.time);
-  print_endline "PROCESSO EM EXECUÇÃO:";
+  print_endline "\n================================================================";
+  print_endline ("|                ESTADO DO SISTEMA (T = " ^ Printf.sprintf "%-3d" manager.time ^ ")                |");
+  print_endline "================================================================";
+  
+  print_endline "\n[ PROCESSO EM EXECUÇÃO ]";
   (match manager.running with
-   | None -> ()
-   | Some p -> print_endline (string_of_pcb p));
+   | None -> print_endline " > (Nenhum)"
+   | Some p -> 
+       print_endline header_pcb;
+       print_endline (string_of_pcb p));
 
-  print_endline "PROCESSOS BLOQUEADOS:\nFila dos processos";
-  List.iter (fun p -> print_endline (string_of_pcb p)) manager.blocked_queue;
+  print_endline "\n[ PROCESSOS PRONTOS A EXECUTAR ]";
+  if manager.ready_queue = [] then print_endline " > (Fila Vazia)" else begin
+    print_endline header_pcb;
+    List.iter (fun p -> print_endline (string_of_pcb p)) manager.ready_queue
+  end;
 
-  print_endline "PROCESSOS PRONTOS A EXECUTAR\nFila dos processos";
-  List.iter (fun p -> print_endline (string_of_pcb p)) manager.ready_queue;
+  print_endline "\n[ PROCESSOS BLOQUEADOS ]";
+  if manager.blocked_queue = [] then print_endline " > (Fila Vazia)" else begin
+    print_endline header_pcb;
+    List.iter (fun p -> print_endline (string_of_pcb p)) manager.blocked_queue
+  end;
 
-  print_endline "PROCESSOS TERMINADOS";
-  List.iter (fun p -> print_endline (string_of_term_pcb p)) manager.terminated;
-  print_endline "--------------------------------";
+  print_endline "\n[ PROCESSOS TERMINADOS ]";
+  if manager.terminated = [] then print_endline " > (Nenhum)" else begin
+    print_endline header_term;
+    List.iter (fun p -> print_endline (string_of_term_pcb p)) manager.terminated
+  end;
+  print_endline "================================================================\n";
   manager
 
-(* Comando T: Imprime estatísticas globais e finaliza a simulação. *)
+(* Comando T: Imprime estatísticas globais detalhadas e finaliza a simulação. *)
 let command_T manager =
   let _ = command_R manager in
-  print_endline "\n=== ESTATÍSTICAS GLOBAIS ===";
+  print_endline "\n================================================================";
+  print_endline "|                     ESTATÍSTICAS GLOBAIS                     |";
+  print_endline "================================================================";
   let term_list = manager.terminated in
   let num_term = List.length term_list in
   if num_term = 0 then
-    print_endline "Nenhum processo terminou. Sem estatísticas globais."
+    print_endline "Nenhum processo terminou. Sem estatísticas globais para análise."
   else begin
     let total_turnaround = ref 0 in
     let total_waiting = ref 0 in
+    print_endline "PID   | Turnaround Time | Waiting Time";
+    print_endline "--------------------------------------";
     List.iter (fun p ->
       let end_t = match p.Process.end_time with Some t -> t | None -> 0 in
       let turnaround = end_t - p.Process.arrival_time in
       let waiting = turnaround - p.Process.cpu_time in
       total_turnaround := !total_turnaround + turnaround;
       total_waiting := !total_waiting + waiting;
-      Printf.printf "PID %d: Turnaround=%d, Waiting=%d\n" p.Process.pid turnaround waiting;
+      Printf.printf "%-5d | %-15d | %-12d\n" p.Process.pid turnaround waiting;
     ) term_list;
-    Printf.printf "\nTempo Médio de Turnaround: %.2f\n" (float_of_int !total_turnaround /. float_of_int num_term);
-    Printf.printf "Tempo Médio de Espera (Waiting): %.2f\n" (float_of_int !total_waiting /. float_of_int num_term);
+    print_endline "--------------------------------------";
+    Printf.printf "Tempo Médio de Turnaround : %.2f quantuns\n" (float_of_int !total_turnaround /. float_of_int num_term);
+    Printf.printf "Tempo Médio de Espera     : %.2f quantuns\n" (float_of_int !total_waiting /. float_of_int num_term);
   end;
-  print_endline "============================";
+  print_endline "================================================================\n";
   manager
 
 (* Limite de tempo de CPU atribuído a um processo (Time Quantum). *)
