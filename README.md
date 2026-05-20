@@ -5,21 +5,49 @@ OSmly — Simulador de Gestão de Processos, Escalonamento e Gestão de Memória
 Como executar ? 
 
 
-DUNE = dune
-EXEC_NAME = group_project
-
-
-
-  Exemplo: 
-run:
 ```
+dune buil
+dune exec
+```
+
+
+build:
+```bash
+	dune build
+```
+
+run:
+```bash
 	dune exec group_project -- fcfs
 ```
-rebuild:
+
+fcfs:
+```bash
+	dune exec group_project -- fcfs
 ```
+
+priority:
+```bash
+	dune exec group_project -- priority
+```
+
+sjfs:
+```bash
+	dune exec group_project -- sjfs
+```
+
+rebuild:
+```bash
 	dune clean && dune build
 ```
-testfork:
+
+clean:
+```bash
+	dune clean
 ```
+
+testfork:
+```bash
 	dune exec group_project -- fcfs
 ```
+
