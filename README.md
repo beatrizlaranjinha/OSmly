@@ -16,11 +16,6 @@ build:
 	dune build
 ```
 
-run:
-```bash
-	dune exec group_project -- fcfs
-```
-
 fcfs:
 ```bash
 	dune exec group_project -- fcfs
@@ -46,8 +41,4 @@ clean:
 	dune clean
 ```
 
-testfork:
-```bash
-	dune exec group_project -- fcfs
-```
 
