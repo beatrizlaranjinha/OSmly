@@ -1,28 +1,27 @@
-(* Tipos de instruções suportadas pelo simulador. *)
 type instruction =
-  | M of int        (* Altera o valor da variável do processo para n *)
-  | A of int        (* Adiciona n à variável do processo *)
-  | S of int        (* Subtrai n à variável do processo *)
-  | B               (* Bloqueia o processo *)
-  | T               (* Termina o processo *)
-  | C of int        (* Cria um processo filho. O pai salta n instruções. *)
-  | L of string     (* Carrega um novo programa para a memória *)
-  | Empty           (* Instrução vazia ou não reconhecida *)
+  | M of int
+  | A of int
+  | S of int
+  | B
+  | T
+  | C of int
+  | L of string
+  | Empty
 
-(* Converte uma string numa estrutura instruction. *)
 let parse_instruction line =
-  let tokens = String.split_on_char ' ' (String.trim line) |> List.filter (fun s -> s <> "") in
-  match tokens with
-  | ["M"; n] -> (match int_of_string_opt n with Some v -> M v | None -> Empty)
-  | ["A"; n] -> (match int_of_string_opt n with Some v -> A v | None -> Empty)
-  | ["S"; n] -> (match int_of_string_opt n with Some v -> S v | None -> Empty)
-  | ["B"] -> B
-  | ["T"] -> T
-  | ["C"; n] -> (match int_of_string_opt n with Some v -> C v | None -> Empty)
-  | ["L"; filename] -> L filename
-  | _ -> Empty
+  let line = String.trim line in
+  if line = "" then Empty
+  else
+    match String.split_on_char ' ' line with
+    | ["M"; n] -> M (int_of_string n)
+    | ["A"; n] -> A (int_of_string n)
+    | ["S"; n] -> S (int_of_string n)
+    | ["B"] -> B
+    | ["T"] -> T
+    | ["C"; n] -> C (int_of_string n)
+    | ["L"; filename] -> L filename
+    | _ -> failwith ("Invalid instruction: " ^ line)
 
-(* Converte uma estrutura instruction numa string representativa. *)
 let string_of_instruction instr =
   match instr with
   | M n -> "M " ^ string_of_int n
