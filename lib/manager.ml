@@ -48,6 +48,8 @@ let create_process manager entry =
       size
       entry.priority
       entry.arrival_time
+      entry.period
+      entry.deadline
   in
 
   manager.next_pid <- manager.next_pid + 1;

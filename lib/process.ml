@@ -24,9 +24,11 @@ type pcb = {
   mutable cpu_time : int;
   mutable end_time : int option;
   mutable state : state;
+  period : int;
+  deadline : int;
 }
 
-let create_pcb pid ppid program_name start_address program_size priority arrival_time =
+let create_pcb pid ppid program_name start_address program_size priority arrival_time period deadline =
   {
     pid;
     ppid;
@@ -40,18 +42,20 @@ let create_pcb pid ppid program_name start_address program_size priority arrival
     cpu_time = 0;
     end_time = None;
     state = Ready;
+    period;
+    deadline;
   }
-
 let print_pcb pcb =
   Printf.printf
-    "PID=%d PPID=%d Program=%s PC=%d Size=%d Value=%d Priority=%d Arrival=%d CPU=%d State=%s\n"
+    "PID=%d | PPID=%d | Program=%s | PC=%d | Value=%d | Priority=%d | Period=%d | Deadline=%d | Arrival=%d | CPU=%d | State=%s\n"
     pcb.pid
     pcb.ppid
     pcb.program_name
     pcb.pc
-    pcb.program_size
     pcb.value
     pcb.priority
+    pcb.period
+    pcb.deadline
     pcb.arrival_time
     pcb.cpu_time
     (string_of_state pcb.state)

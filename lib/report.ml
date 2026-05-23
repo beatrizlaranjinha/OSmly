@@ -3,13 +3,15 @@ open Manager
 
 let print_process process =
   Printf.printf
-    "PID=%d | PPID=%d | Program=%s | PC=%d | Value=%d | Priority=%d | Arrival=%d | CPU=%d | State=%s\n"
+    "PID=%d | PPID=%d | Program=%s | PC=%d | Value=%d | Priority=%d | Period=%d | Deadline=%d | Arrival=%d | CPU=%d | State=%s\n"
     process.pid
     process.ppid
     process.program_name
     process.pc
     process.value
     process.priority
+    process.period
+    process.deadline
     process.arrival_time
     process.cpu_time
     (string_of_state process.state)
@@ -47,8 +49,7 @@ let print_finished_stats process =
         process.cpu_time
         turnaround
         waiting
-  | _ ->
-      ()
+  | _ -> ()
 
 let final_statistics manager =
   Printf.printf "\n========== ESTATÍSTICAS FINAIS ==========\n";

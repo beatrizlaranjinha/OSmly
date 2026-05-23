@@ -13,7 +13,6 @@ let dispatch_instruction memory process next_pid current_time =
   let instr = get_instruction memory process.pc in
 
   match instr with
-
   | M n ->
       process.value <- n;
       process.pc <- process.pc + 1;
@@ -45,7 +44,6 @@ let dispatch_instruction memory process next_pid current_time =
       Terminated
 
   | C n ->
-
       let child =
         create_pcb
           next_pid
@@ -55,6 +53,8 @@ let dispatch_instruction memory process next_pid current_time =
           process.program_size
           process.priority
           current_time
+          process.period
+          process.deadline
       in
 
       child.pc <- process.pc + 1;

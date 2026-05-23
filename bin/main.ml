@@ -5,6 +5,8 @@ let parse_algorithm arg =
   | "fcfs" -> Scheduler.FCFS
   | "priority" -> Scheduler.Priority
   | "sjfs" -> Scheduler.SJFS
+  | "rm" -> Scheduler.RM
+  | "edf" -> Scheduler.EDF
   | _ ->
       Printf.printf "Algoritmo inválido. A usar FCFS.\n";
       Scheduler.FCFS
@@ -27,6 +29,8 @@ let rec run_control manager commands =
 
       | "R" ->
           Report.report manager;
+          print_endline "\n=== MEMORY STATE ===";
+          Memory.print_memory manager.memory;
           run_control manager rest
 
       | "T" ->
@@ -63,12 +67,17 @@ let () =
       Scheduler.FCFS
   in
 
+  Printf.printf "Algoritmo selecionado: %s\n"
+    (Scheduler.string_of_algorithm algorithm);
+
   let manager =
     Manager.create_manager
       "data/plan.txt"
       algorithm
       3
   in
+
+  Printf.printf "Time quantum: %d\n" manager.quantum;
 
   let commands =
     read_file_lines "data/control.txt"
