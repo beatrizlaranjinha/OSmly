@@ -134,25 +134,6 @@ p2.prg 0 1 3 10
 p3.prg 0 3 8 15
 ```
 
----
-
-control.txt
-
-Controla a execução do simulador.
-
-Comandos disponíveis:
-- `E` — executar
-- `D` — desbloquear processo
-- `R` — relatório do sistema
-- `T` — terminar simulador
-
----
-
-Exemplo de Execução
-
-```bash
-dune exec group_project -- priority
-```
 
 ---
 
