@@ -2,14 +2,6 @@
 
 OSmly é um simulador de gestão de processos desenvolvido em OCaml no âmbito da unidade curricular de Sistemas Operativos.
 
-O projeto simula funcionalidades fundamentais de um sistema operativo, incluindo:
-- escalonamento de processos;
-- gestão de memória;
-- criação e terminação de processos;
-- bloqueio e desbloqueio;
-- execução baseada em time quantum;
-- mecanismos fork/exec;
-- algoritmos clássicos e de tempo real.
 
 ---
 
@@ -46,7 +38,7 @@ O projeto simula funcionalidades fundamentais de um sistema operativo, incluindo
 
 ---
 
-# Estrutura do Projeto
+##Estrutura do Projeto
 
 ```text
 lib/
@@ -67,7 +59,7 @@ data/
 
 ---
 
-# Como Compilar
+Como Compilar
 
 ## Build
 
@@ -89,33 +81,33 @@ dune clean
 
 ---
 
-# Como Executar
+Como Executar
 
-## FCFS
+##FCFS
 
 ```bash
 dune exec group_project -- fcfs
 ```
 
-## Priority Scheduling
+##Priority Scheduling
 
 ```bash
 dune exec group_project -- priority
 ```
 
-## SJFS
+##SJFS
 
 ```bash
 dune exec group_project -- sjfs
 ```
 
-## Rate Monotonic
+##Rate Monotonic
 
 ```bash
 dune exec group_project -- rm
 ```
 
-## Earliest Deadline First
+##Earliest Deadline First
 
 ```bash
 dune exec group_project -- edf
@@ -123,9 +115,9 @@ dune exec group_project -- edf
 
 ---
 
-# Ficheiros de Entrada
+Ficheiros de Entrada
 
-## plan.txt
+plan.txt
 
 Define:
 - programas;
@@ -144,7 +136,7 @@ p3.prg 0 3 8 15
 
 ---
 
-## control.txt
+control.txt
 
 Controla a execução do simulador.
 
@@ -156,7 +148,7 @@ Comandos disponíveis:
 
 ---
 
-# Exemplo de Execução
+Exemplo de Execução
 
 ```bash
 dune exec group_project -- priority
@@ -164,16 +156,11 @@ dune exec group_project -- priority
 
 ---
 
-# Tecnologias Utilizadas
+Tecnologias Utilizadas
 
 - OCaml
 - Dune
-- LaTeX
 
 ---
 
-# Repositório
 
-```text
-https://github.com/beatrizlaranjinha/OSmly/
-```
