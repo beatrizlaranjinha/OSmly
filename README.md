@@ -36,28 +36,6 @@ OSmly é um simulador de gestão de processos desenvolvido em OCaml no âmbito d
 - `C n` — cria processo filho (fork)
 - `L file` — substitui programa atual (exec)
 
----
-
-##Estrutura do Projeto
-
-```text
-lib/
-├── dispatcher.ml
-├── instructions.ml
-├── manager.ml
-├── memory.ml
-├── plan.ml
-├── process.ml
-├── report.ml
-└── scheduler.ml
-
-data/
-├── plan.txt
-├── control.txt
-└── *.prg
-```
-
----
 
 Como Compilar
 
@@ -113,35 +91,5 @@ dune exec group_project -- rm
 dune exec group_project -- edf
 ```
 
----
-
-Ficheiros de Entrada
-
-plan.txt
-
-Define:
-- programas;
-- tempo de chegada;
-- prioridade;
-- período;
-- deadline.
-
-Exemplo:
-
-```text
-p1.prg 0 5 5 20
-p2.prg 0 1 3 10
-p3.prg 0 3 8 15
-```
-
-
----
-
-Tecnologias Utilizadas
-
-- OCaml
-- Dune
-
----
 
 
