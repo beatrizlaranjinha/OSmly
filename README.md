@@ -19,7 +19,7 @@ Instruções Suportadas
 - `L file` — substitui programa atual (exec)
 
 
-Como Compilar
+Como Compilar:
 
 Build
 
@@ -27,7 +27,7 @@ Build
 dune build
 ```
 
-Como Executar
+Como Executar:
 
 FCFS
 
