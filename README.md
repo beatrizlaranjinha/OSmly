@@ -1,12 +1,9 @@
-# OSmly — Simulador de Gestão de Processos em OCaml
+OSmly — Simulador de Gestão de Processos em OCaml
+Desenvolvido no âmbito da unidade curricular de Sistemas Operativos.
 
-OSmly é um simulador de gestão de processos desenvolvido em OCaml no âmbito da unidade curricular de Sistemas Operativos.
 
 
----
-
-# Funcionalidades
-
+Funcionalidades:
 Escalonamento
 Gestão de Processos
 Gestão de Memória
@@ -29,8 +26,6 @@ Build
 ```bash
 dune build
 ```
-
-
 
 Como Executar
 
